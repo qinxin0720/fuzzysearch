@@ -1,24 +1,23 @@
 package xorm
 
 import (
-	"fmt"
 	"strings"
 
 	"xorm.io/builder"
 )
 
-func FuzzySearch(keywords, key string, moreKeys ...string) (string, []interface{}, error) {
+func FuzzySearch(keywords, key string, moreKeys ...string) (string, []any, error) {
 	condition := make([]string, 0)
 	keywords = strings.ReplaceAll(keywords, "|", "||")
 	keywords = strings.ReplaceAll(keywords, "_", "|_")
 	keywords = strings.ReplaceAll(keywords, "%", "|%")
 	keywords = strings.ReplaceAll(keywords, "'", "|'")
 	searchText := "%" + strings.ToUpper(keywords) + "%"
-	condition = append(condition, fmt.Sprintf(`upper(%s) LIKE ? ESCAPE '|'`, key))
+	condition = append(condition, "upper("+key+`) LIKE ? ESCAPE '|'`)
 	for _, v := range moreKeys {
-		condition = append(condition, fmt.Sprintf(`upper(%s) LIKE ? ESCAPE '|'`, v))
+		condition = append(condition, "upper("+v+`) LIKE ? ESCAPE '|'`)
 	}
-	values := make([]interface{}, len(moreKeys)+1)
+	values := make([]any, len(moreKeys)+1)
 	for i := range values {
 		values[i] = searchText
 	}

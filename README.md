@@ -39,6 +39,6 @@ import fuzzysearch "github.com/qinxin0720/fuzzysearch/gorm"
 
 list := make([]Student, 0)
 
-db.Scopes(fuzzySearch.FuzzySearch("alice", "name", "description")).
+db.Scopes(fuzzysearch.FuzzySearch("alice", "name", "description")).
     Find(&list)
 ```
